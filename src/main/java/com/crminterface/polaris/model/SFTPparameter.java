@@ -21,6 +21,7 @@ public class SFTPparameter {
 	private String port;
 	private String username;
 	private String password;
+	
 	public SFTPparameter() {
 		super();
 	}
