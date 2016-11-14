@@ -3,6 +3,7 @@
  */
 package com.crminterface.polaris.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
+//import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author hkaramok
@@ -21,8 +22,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name="APPLICATION_CONFIGURATION")
-@XmlRootElement(name = "ApplicationConfiguration")
-public class ApplicationConfiguration {
+//@XmlRootElement(name = "ApplicationConfiguration")
+public class ApplicationConfiguration implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String projectName;

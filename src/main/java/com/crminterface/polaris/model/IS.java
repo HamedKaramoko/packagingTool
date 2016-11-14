@@ -5,14 +5,11 @@ package com.crminterface.polaris.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author hkaramok
  *
  */
-@XmlRootElement(name = "IS")
 @Entity
 public class IS {
 	
@@ -21,9 +18,6 @@ public class IS {
 	private String host;
 	private String port;
 	private String outBoundPackagePath;
-
-	@ManyToOne
-	private ApplicationConfiguration applicationConfiguration;
 
 	public IS() {
 		super();
@@ -52,11 +46,5 @@ public class IS {
 	}
 	public void setOutBoundPackagePath(String outBoundPackagePath) {
 		this.outBoundPackagePath = outBoundPackagePath;
-	}
-	public ApplicationConfiguration getApplicationConfiguration() {
-		return applicationConfiguration;
-	}
-	public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration) {
-		this.applicationConfiguration = applicationConfiguration;
 	}
 }

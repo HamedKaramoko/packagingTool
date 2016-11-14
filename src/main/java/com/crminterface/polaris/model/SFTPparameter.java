@@ -5,13 +5,11 @@ package com.crminterface.polaris.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author hkaramok
  *
  */
-@XmlRootElement(name = "SFTPparameter")
 @Entity
 public class SFTPparameter {
 	
