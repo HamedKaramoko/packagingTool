@@ -1,3 +1,7 @@
 target/
 .DS_Store
 *.properties
+.classpath
+.project
+.springBeans
+.settings/
