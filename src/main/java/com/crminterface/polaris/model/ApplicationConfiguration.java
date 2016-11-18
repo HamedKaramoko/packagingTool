@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-//import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author hkaramok
@@ -22,7 +21,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="APPLICATION_CONFIGURATION")
-//@XmlRootElement(name = "ApplicationConfiguration")
 public class ApplicationConfiguration implements Serializable {
 
 	/**
