@@ -18,4 +18,9 @@ public class ApplicationConfigurationDAOImpl implements ApplicationConfiguration
 		return entityManager.find(ApplicationConfiguration.class, projectName);
 	}
 
+	@Override
+	public void saveProject(ApplicationConfiguration appConf) {
+		entityManager.persist(appConf);
+	}
+
 }
