@@ -3,7 +3,6 @@
  */
 package com.crminterface.polaris.model;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,34 +12,28 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 /**
  * @author hkaramok
  *
  */
 @Entity
-@Table(name="APPLICATION_CONFIGURATION")
-public class ApplicationConfiguration implements Serializable {
+public class ApplicationConfiguration {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String projectName;
 
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="IS_NAME")
-	private Set<IS> isList = new HashSet<IS>();
+	private Set<IntegrationServer> isList = new HashSet<IntegrationServer>();
 	private String internDelivery;
 	private String propertiesPath;
 	private String ressourceFile;
 	private String lastDeliveryVersion;
 	private String currentDeliveryVersion;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="SFTP_ID")
 	private SFTPparameter sftpParameter;
 
@@ -56,11 +49,11 @@ public class ApplicationConfiguration implements Serializable {
 		this.projectName = projectName;
 	}
 
-	public Set<IS> getIsList() {
+	public Set<IntegrationServer> getIsList() {
 		return isList;
 	}
 
-	public void setIsList(Set<IS> isList) {
+	public void setIsList(Set<IntegrationServer> isList) {
 		this.isList = isList;
 	}
 

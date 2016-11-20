@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<!-- JAXRS providers -->
+	<bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
+
+	<!-- CXF Swagger2Feature -->
+	<bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.Swagger2Feature">
+		<!-- customize some of the properties -->
+		<property name="basePath" value="/" />
+	</bean>
 
 	<!-- Using that line entails you to make an @Component on all your services -->
 	<context:component-scan base-package="com.crminterface.polaris" />
@@ -18,16 +26,23 @@
 
 	<!-- basePackages="com.capgemini.polaris.services" -->
 	<jaxrs:server id="restContainer" transportId="http://cxf.apache.org/transports/http"
-		basePackages="com.crminterface.polaris.services">
+		basePackages="com.crminterface.polaris.service">
 		<!-- <jaxrs:features> -->
 		<!-- <cxf:logging /> -->
 		<!-- </jaxrs:features> -->
+		<!-- <jaxrs:providers> -->
+		<!-- <bean class="com.orange.messir.service.api.exception.ApiExceptionMapper" 
+			/> -->
+		<!-- <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" 
+			/> -->
+		<!-- <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" /> -->
+		<!-- </jaxrs:providers> -->
 		<jaxrs:providers>
-			<!-- <bean class="com.orange.messir.service.api.exception.ApiExceptionMapper" 
-				/> -->
-			<!-- <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" 
-				/> -->
-<!-- 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" /> -->
+			<ref bean="jsonProvider" />
 		</jaxrs:providers>
+		<jaxrs:features>
+			<ref bean="swagger2Feature" />
+		</jaxrs:features>
 	</jaxrs:server>
+	<!-- http://localhost:8080/packagingToolBack/api-docs?/url=/packagingToolBack/swagger.json#!/SaveService/testSave -->
 </beans>

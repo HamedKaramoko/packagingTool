@@ -11,7 +11,7 @@ import javax.persistence.Id;
  *
  */
 @Entity
-public class IS {
+public class IntegrationServer {
 	
 	@Id
 	private String name;
@@ -19,7 +19,7 @@ public class IS {
 	private String port;
 	private String outBoundPackagePath;
 
-	public IS() {
+	public IntegrationServer() {
 		super();
 	}
 

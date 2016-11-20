@@ -8,6 +8,8 @@ import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -16,8 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.crminterface.polaris.dao.ApplicationConfigurationDAO;
 import com.crminterface.polaris.model.ApplicationConfiguration;
-import com.crminterface.polaris.model.IS;
+import com.crminterface.polaris.model.IntegrationServer;
 import com.crminterface.polaris.model.SFTPparameter;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author hamedkaramoko
@@ -25,6 +30,7 @@ import com.crminterface.polaris.model.SFTPparameter;
  */
 @Transactional
 @Path("/SaveService")
+@Api(value="SaveService")
 public class SaveService {
 	
 	@Autowired
@@ -32,9 +38,11 @@ public class SaveService {
 
 	@GET
 	@Path("/testSave")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value="/testSave", notes="Save an application configuration")
 	public Response testSave(){
 		ApplicationConfiguration appConf = new ApplicationConfiguration();
-		IS isFacade = new IS();
+		IntegrationServer isFacade = new IntegrationServer();
 		isFacade.setName("DEV2");
 		isFacade.setHost("http://frrnspoldev");
 		isFacade.setPort("15880");
@@ -45,7 +53,7 @@ public class SaveService {
 		sftpFacade.setUsername("root");
 		sftpFacade.setPassword("root01");
 		
-		Set<IS> isList = new HashSet<IS>();
+		Set<IntegrationServer> isList = new HashSet<IntegrationServer>();
 		isList.add(isFacade);
 		
 		appConf.setProjectName("Facade");
