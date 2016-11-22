@@ -65,7 +65,7 @@ public class SaveService {
 		appConf.setCurrentDeliveryVersion(null);
 		appConf.setSftpParameter(sftpFacade);
 		
-		applicationConfDAO.saveProject(appConf);
+		applicationConfDAO.createApplicationConfiguration(appConf);
 		
 		return Response.status(Status.OK).entity(appConf).build();
 	}

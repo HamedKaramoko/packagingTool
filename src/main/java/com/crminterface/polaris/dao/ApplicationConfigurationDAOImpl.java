@@ -1,7 +1,10 @@
 package com.crminterface.polaris.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +22,16 @@ public class ApplicationConfigurationDAOImpl implements ApplicationConfiguration
 	}
 
 	@Override
-	public void saveProject(ApplicationConfiguration appConf) {
+	public void createApplicationConfiguration(ApplicationConfiguration appConf) {
 		entityManager.persist(appConf);
+	}
+
+	@Override
+	public List<ApplicationConfiguration> getAllApplicationConfiguration() {
+		TypedQuery<ApplicationConfiguration> query = entityManager.createQuery(
+                "SELECT FROM ApplicationConfiguration appConf ORDER BY appConf.projectName",
+                ApplicationConfiguration.class);
+        return query.getResultList();
 	}
 
 }
