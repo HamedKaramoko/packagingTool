@@ -7,5 +7,5 @@ import com.crminterface.polaris.model.ApplicationConfiguration;
 public interface ApplicationConfigurationDAO {
 	public ApplicationConfiguration findByProjectName(String projectName);
 	public List<ApplicationConfiguration> getAllApplicationConfiguration();
-	public void createApplicationConfiguration(ApplicationConfiguration appConf);
+	public ApplicationConfiguration createApplicationConfiguration(ApplicationConfiguration appConf);
 }

@@ -3,6 +3,8 @@
  */
 package com.crminterface.polaris.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -10,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement(name = "PackageInfo")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class PackageInfo {
 	private String name;
 	private String version;

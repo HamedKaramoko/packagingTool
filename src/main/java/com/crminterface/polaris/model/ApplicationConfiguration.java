@@ -3,37 +3,53 @@
  */
 package com.crminterface.polaris.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author hkaramok
  *
  */
 @Entity
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ApplicationConfiguration {
 
 
 	@Id
+	@XmlAttribute
 	private String projectName;
+	
+	private String description;
 
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="IS_NAME")
-	private Set<IntegrationServer> isList = new HashSet<IntegrationServer>();
+	@XmlElementWrapper(name="isList")
+	@XmlElements({@XmlElement(name="integrationServer", type=IntegrationServer.class)})
+	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
+	@JoinTable(name = "AppConf_IS", joinColumns = @JoinColumn(name = "appConf_name"), inverseJoinColumns = @JoinColumn(name = "IS_name"))
+	private Set<IntegrationServer> isList;
+	
 	private String internDelivery;
 	private String propertiesPath;
 	private String ressourceFile;
 	private String lastDeliveryVersion;
 	private String currentDeliveryVersion;
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL, orphanRemoval=true)
 	@JoinColumn(name="SFTP_ID")
 	private SFTPparameter sftpParameter;
 
@@ -103,5 +119,19 @@ public class ApplicationConfiguration {
 
 	public void setSftpParameter(SFTPparameter sftpParameter) {
 		this.sftpParameter = sftpParameter;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
