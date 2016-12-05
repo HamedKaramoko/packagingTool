@@ -3,9 +3,7 @@
  */
 package com.crminterface.polaris.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -26,8 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.crminterface.polaris.dao.ApplicationConfigurationDAO;
+import com.crminterface.polaris.dao.ApplicationConfigurationJAXBDAOImpl;
 import com.crminterface.polaris.model.ApplicationConfiguration;
-import com.crminterface.polaris.utils.JAXBUtils;
+import com.crminterface.polaris.model.ApplicationConfigurationList;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,9 +39,9 @@ import io.swagger.annotations.ApiParam;
 @Transactional
 @CrossOriginResourceSharing(
 		allowAllOrigins = true, 
-        allowCredentials = true, 
-        exposeHeaders = { "X-custom-3", "X-custom-4" }
-   )
+		allowCredentials = true, 
+		exposeHeaders = { "X-custom-3", "X-custom-4" }
+		)
 @Path("/ApplicationConfigurationService")
 @Api(value="ApplicationConfigurationService")
 public class ApplicationConfigurationService {
@@ -52,9 +51,9 @@ public class ApplicationConfigurationService {
 
 	@Autowired
 	private DozerBeanMapper mapper;
-	
+
 	@Autowired
-	private JAXBUtils<Set<ApplicationConfiguration>> jaxbUtils;
+	private ApplicationConfigurationJAXBDAOImpl applicationConfjaxBDAO;
 
 	private static Logger LOGGER = LoggerFactory.getLogger(ApplicationConfigurationService.class);
 
@@ -65,13 +64,13 @@ public class ApplicationConfigurationService {
 	public Response getAll() throws JAXBException{
 
 		//List<ApplicationConfiguration> appConfList = applicationConfDAO.getAllApplicationConfiguration();
-		Set<ApplicationConfiguration> appConfList = new HashSet<ApplicationConfiguration>();
-		jaxbUtils.convertXMLFileToObject("D:\\packagingTest\\applicationConf.xml", appConfList);
+
+		ApplicationConfigurationList appConfList = applicationConfjaxBDAO.getAllApplicationConfiguration("D:\\packagingTest\\applicationConf.xml");
 		LOGGER.debug("List of application configuration : {}", appConfList);
 
-		return Response.status(Status.OK).entity(appConfList).build();
+		return Response.status(Status.OK).entity(appConfList.getApplicationConfigurationList()).build();
 	}
-	
+
 	@GET
 	@Path("/get")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -89,12 +88,17 @@ public class ApplicationConfigurationService {
 	@Path("/create")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="/create", notes="Create an application configuration", response=ApplicationConfiguration.class)
-	public Response create(@ApiParam(name = "applicationConfiguration") ApplicationConfiguration applicationConfiguration) throws JAXBException{
+	public Response create(@ApiParam(name = "applicationConfiguration") ApplicationConfiguration applicationConfiguration) throws JAXBException, IOException{
 
-		ApplicationConfiguration appCreated = applicationConfDAO.createApplicationConfiguration(applicationConfiguration);
-		//JAXBUtils.convertObjectToXmlFile(applicationConfiguration, "app.xml");
+		// Using Hibernate
+		//ApplicationConfiguration appCreated = applicationConfDAO.createApplicationConfiguration(applicationConfiguration);
 
-		return Response.status(Status.OK).entity(appCreated).build();
+		// Using Jaxb
+		ApplicationConfigurationList appConfList = new ApplicationConfigurationList();
+		appConfList.getApplicationConfigurationList().add(applicationConfiguration);
+		applicationConfjaxBDAO.createApplicationConfiguration(appConfList, "D:\\packagingTest\\applicationConf.xml");
+
+		return Response.status(Status.OK).build();
 	}
 
 	@PUT

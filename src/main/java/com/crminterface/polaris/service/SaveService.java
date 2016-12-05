@@ -19,10 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.crminterface.polaris.dao.ApplicationConfigurationDAO;
+import com.crminterface.polaris.dao.ApplicationConfigurationJAXBDAOImpl;
 import com.crminterface.polaris.model.ApplicationConfiguration;
+import com.crminterface.polaris.model.ApplicationConfigurationList;
 import com.crminterface.polaris.model.IntegrationServer;
 import com.crminterface.polaris.model.SFTPparameter;
-import com.crminterface.polaris.utils.JAXBUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +41,7 @@ public class SaveService {
 	private ApplicationConfigurationDAO applicationConfDAO;
 	
 	@Autowired
-	private JAXBUtils<Set<ApplicationConfiguration>> jaxbUtils;
+	private ApplicationConfigurationJAXBDAOImpl applicationConfjaxBDAO;
 
 	@POST
 	@Path("/testSave")
@@ -91,15 +92,14 @@ public class SaveService {
 		appConf2.setSftpParameter(sftpFacade);
 		
 		//applicationConfDAO.createApplicationConfiguration(appConf);
-		Set<ApplicationConfiguration> appConfList = new HashSet<ApplicationConfiguration>();
-		appConfList.add(appConf);
-		appConfList.add(appConf2);
+		ApplicationConfigurationList appConfList = new ApplicationConfigurationList();
+		appConfList.getApplicationConfigurationList().add(appConf);
+		appConfList.getApplicationConfigurationList().add(appConf2);
 		
 		//JAXBUtils<ApplicationConfiguration> jaxb = new JAXBUtils<ApplicationConfiguration>();
 		
-		jaxbUtils.convertObjectToXmlFile(appConfList, "D:\\packagingTest\\applicationConf.xml");
+		applicationConfjaxBDAO.createApplicationConfiguration(appConfList, "D:\\packagingTest\\applicationConf.xml");
 		
-		
-		return Response.status(Status.OK).entity(appConf).build();
+		return Response.status(Status.OK).entity(appConfList.getApplicationConfigurationList()).build();
 	}
 }

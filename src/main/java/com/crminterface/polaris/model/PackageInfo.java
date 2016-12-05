@@ -15,28 +15,38 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PackageInfo {
 	private String name;
+	private String description;
 	private String version;
 	private String jvm_version;
 	private String specificFilter;
+	private Boolean toExport;
 	/**
 	 * 
 	 */
 	public PackageInfo() {
 		super();
 	}
+	
 	/**
 	 * @param name
+	 * @param description
 	 * @param version
 	 * @param jvm_version
 	 * @param specificFilter
+	 * @param toExport
 	 */
-	public PackageInfo(String name, String version, String jvm_version, String specificFilter) {
+	public PackageInfo(String name, String description, String version, String jvm_version, String specificFilter,
+			Boolean toExport) {
 		super();
 		this.name = name;
+		this.description = description;
 		this.version = version;
 		this.jvm_version = jvm_version;
 		this.specificFilter = specificFilter;
+		this.toExport = toExport;
 	}
+
+
 	/**
 	 * @return the name
 	 */
@@ -48,6 +58,18 @@ public class PackageInfo {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	/**
 	 * @return the version
@@ -85,5 +107,18 @@ public class PackageInfo {
 	public void setSpecificFilter(String specificFilter) {
 		this.specificFilter = specificFilter;
 	}
-
+	/**
+	 * @return the toExport
+	 */
+	public Boolean getToExport() {
+		return toExport;
+	}
+	/**
+	 * @param toExport the toExport to set
+	 */
+	public void setToExport(Boolean toExport) {
+		this.toExport = toExport;
+	}
+	
+	
 }
