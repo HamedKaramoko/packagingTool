@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -28,20 +27,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ApplicationConfiguration {
+public class Project {
 
 
 	@Id
 	@XmlAttribute
 	private String projectName;
 	
+	@XmlAttribute
 	private String description;
 
-	@XmlElementWrapper(name="isList")
+	@XmlElementWrapper(name="integrationServers")
 	@XmlElements({@XmlElement(name="integrationServer", type=IntegrationServer.class)})
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
-	@JoinTable(name = "AppConf_IS", joinColumns = @JoinColumn(name = "appConf_name"), inverseJoinColumns = @JoinColumn(name = "IS_name"))
-	private Set<IntegrationServer> isList;
+	@JoinTable(name = "Project_IntegrationServer", joinColumns = @JoinColumn(name = "project_name"), inverseJoinColumns = @JoinColumn(name = "IntegrationServer_name"))
+	private Set<IntegrationServer> integrationServers;
 	
 	private String internDelivery;
 	private String propertiesPath;
@@ -49,11 +49,7 @@ public class ApplicationConfiguration {
 	private String lastDeliveryVersion;
 	private String currentDeliveryVersion;
 
-	@OneToOne(cascade=CascadeType.ALL, orphanRemoval=true)
-	@JoinColumn(name="SFTP_ID")
-	private SFTPparameter sftpParameter;
-
-	public ApplicationConfiguration() {
+	public Project() {
 		super();
 	}
 
@@ -65,12 +61,12 @@ public class ApplicationConfiguration {
 		this.projectName = projectName;
 	}
 
-	public Set<IntegrationServer> getIsList() {
-		return isList;
+	public Set<IntegrationServer> getIntegrationServers() {
+		return integrationServers;
 	}
 
-	public void setIsList(Set<IntegrationServer> isList) {
-		this.isList = isList;
+	public void setIntegrationServers(Set<IntegrationServer> integrationServers) {
+		this.integrationServers = integrationServers;
 	}
 
 	public String getInternDelivery() {
@@ -113,14 +109,6 @@ public class ApplicationConfiguration {
 		this.currentDeliveryVersion = currentDeliveryVersion;
 	}
 
-	public SFTPparameter getSftpParameter() {
-		return sftpParameter;
-	}
-
-	public void setSftpParameter(SFTPparameter sftpParameter) {
-		this.sftpParameter = sftpParameter;
-	}
-
 	/**
 	 * @return the description
 	 */
@@ -133,5 +121,36 @@ public class ApplicationConfiguration {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((projectName == null) ? 0 : projectName.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Project other = (Project) obj;
+		if (projectName == null) {
+			if (other.projectName != null)
+				return false;
+		} else if (!projectName.equals(other.projectName))
+			return false;
+		return true;
 	}
 }

@@ -29,8 +29,7 @@ public class SFTPparameter implements Serializable {
 	@Id
 	@XmlTransient
 	private int id;
-	private String host;
-	private String port;
+	private int port;
 	private String username;
 	private String password;
 	
@@ -44,16 +43,10 @@ public class SFTPparameter implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getHost() {
-		return host;
-	}
-	public void setHost(String host) {
-		this.host = host;
-	}
-	public String getPort() {
+	public int getPort() {
 		return port;
 	}
-	public void setPort(String port) {
+	public void setPort(int port) {
 		this.port = port;
 	}
 	public String getUsername() {
@@ -68,5 +61,4 @@ public class SFTPparameter implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 }

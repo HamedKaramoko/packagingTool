@@ -4,11 +4,12 @@
 package com.crminterface.polaris.utils;
 
 import java.io.File;
-import java.io.IOException;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 
 /**
  * @author hkaramok
@@ -17,44 +18,52 @@ import javax.xml.bind.Unmarshaller;
 public class JAXBUtils<T> {
 
 
-
+	/**
+	 * Runs a xml file for creating an object.
+	 * 
+	 * @param xmlFilePath represents the xml file to load inside an object.
+	 * @param object represents the object in which the xmlFile will be load.
+	 * @return the object.
+	 * @throws RuntimeException when JAXBException occurs during operation.
+	 */
 	@SuppressWarnings("unchecked")
-	public T convertXMLFileToObject(String xmlFilePath, T object) throws JAXBException{
+	public T convertXMLFileToObject(String xmlFilePath, T object){
 
-		try {
+		try{
 			File xmlFile = new File(xmlFilePath);
 			JAXBContext jaxbContext;
-
 			jaxbContext = JAXBContext.newInstance(object.getClass());
-
-
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			T o = (T)jaxbUnmarshaller.unmarshal(xmlFile);
-			return o;
 
-		} catch (JAXBException jaxbe) {
-			throw jaxbe;
+			return o;
+		} catch (JAXBException e) {
+			throw new RuntimeException(e);
 		}
+
 	}
 
-	public File convertObjectToXmlFile(T object, String xmlFilePath) throws JAXBException, IOException{
+	/**
+	 * Converts an object into a xml file.
+	 * 
+	 * @param object represents the object that has to be convert into xml file.
+	 * @param xmlFilePath represents the xml file.
+	 * @return the file.
+	 * @throws RuntimeException when JAXBException occurs during operation.
+	 */
+	public File convertObjectToXmlFile(T object, String xmlFilePath){
 
-		File xmlFile = new File(xmlFilePath);
-		
-		try {
+		try{
+			File xmlFile = new File(xmlFilePath);
+
 			JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-			jaxbMarshaller.marshal(object, System.out);
 			jaxbMarshaller.marshal(object, xmlFile);
 
-
-		} catch (JAXBException jaxbe) {
-			throw jaxbe;
+			return xmlFile;
+		} catch (NullPointerException | IllegalArgumentException | JAXBException e) {
+			throw new RuntimeException(e);
 		}
-		return xmlFile;
 	}
-
 }

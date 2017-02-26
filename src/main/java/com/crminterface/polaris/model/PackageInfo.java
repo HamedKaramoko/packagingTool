@@ -119,6 +119,4 @@ public class PackageInfo {
 	public void setToExport(Boolean toExport) {
 		this.toExport = toExport;
 	}
-	
-	
 }

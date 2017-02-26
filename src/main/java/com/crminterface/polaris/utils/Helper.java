@@ -5,15 +5,19 @@ package com.crminterface.polaris.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-/*import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;*/
+
+import com.crminterface.polaris.model.PackageInfo;
+import com.crminterface.polaris.resourcesmodel.PackageElement;
+import com.crminterface.polaris.resourcesmodel.Resources;
+
 
 /**
  * @author hkaramok
@@ -21,161 +25,136 @@ import org.jdom.input.SAXBuilder;*/
  */
 public class Helper {
 
+	public static JAXBUtils<Resources> jaxbUtils = new JAXBUtils<Resources>();
+
 
 	/**
-	 * This service copy a file from one place to another one.
+	 * This service copies a file from one place to another one.
 	 * 
-	 * @param srcFile represents the path of the file to copy
-	 * @param dstFile represents the path where to create the file
-	 * @throws IOException
+	 * @param srcFile represents the path of the file to copy.
+	 * @param dstFile represents the path where to create the file.
+	 * @param deleteIfExist if false and dstFile exists, it won't be rewrite.
+	 * @return a Boolean that indicates whether the operation worked or not.
+	 * @throws RuntimeException when source or destination is invalid or if an error occurs during copying.
 	 */
-	public void copyFile(String srcFile, String dstFile) throws IOException{
-		try {
-			File src = new File(srcFile);
-			File dst = new File(dstFile);
-			FileUtils.copyFile(src, dst);
+	public static Boolean copyFile(String srcFile, String dstFile, Boolean deleteIfExist){
+		File file = new File(dstFile);
+		try{
+			if(file.isFile()){
+				if(!deleteIfExist){
+					return false;
+				} 
+			}
+			FileUtils.copyFile(new File(srcFile), new File(dstFile));
+			return true;
 		} catch (IOException ioe) {
-			throw ioe;
-		} catch (NullPointerException npe) {
-			throw npe;
+			throw new RuntimeException(ioe);
 		}
 	}
 
 	/**
-	 * This service copy a folder from one place to another one.
+	 * This service copies a folder from one place to another one.
 	 * 
-	 * @param directorySrc represents the path of the folder to copy
-	 * @param directoryDst represents the path where to create the folder
-	 * @throws IOException
+	 * @param directorySrc represents the path of the folder to copy.
+	 * @param directoryDst represents the path where to create the folder.
+	 * @param deleteIfExist if false and directoryDst exists, it won't be rewrite.
+	 * @return a Boolean that indicates whether the operation worked or not.
+	 * @throws RuntimeException when source or destination is invalid or if an error occurs during copying.
 	 */
-	public void copyDirectory(String directorySrc, String directoryDst) throws IOException{
-		try {
-			File srcDir = new File(directorySrc);
-			File srcDest = new File(directoryDst);
-
-			FileUtils.copyDirectory(srcDir, srcDest);
+	public static Boolean copyDirectory(String directorySrc, String directoryDst, Boolean deleteIfExist){
+		File file = new File(directoryDst);
+		try{
+			if(file.isDirectory()){
+				if(!deleteIfExist){
+					return false;
+				}
+			}
+			FileUtils.copyDirectory(new File(directorySrc), file);
+			return true;
 		} catch (IOException ioe) {
-			throw ioe;
-		} catch (NullPointerException npe) {
-			throw npe;
+			throw new RuntimeException(ioe);
 		}
 	}
 
 	/**
-	 * This service create a file.
+	 * Models the resources file as an object.
 	 * 
-	 * @param fileName represents the path of the file to create
-	 * @return boolean value (true if the file is created and else if not)
-	 * @throws IOException
+	 * @param filePath represents the path of the resources file.
+	 * @return an object representing the resources file.
 	 */
-	public boolean createFile(String fileName) throws IOException{
-		try {
-			File file = new File(fileName);
-			return file.createNewFile();
-		} catch (IOException ioe) {
-			throw ioe;
-		}
+	public static Resources getResourcesFileAsObject(String filePath){
+		Resources resourcesObject = new Resources();
+		return jaxbUtils.convertXMLFileToObject(filePath, resourcesObject);
 	}
 
 	/**
-	 * This service create a folder.
+	 * It gets all the packageElement object present in Resources object and also the ones not present.
 	 * 
-	 * @param directoryName represents the path of the folder to create
-	 * @return boolean value (true if the folder is created and else if not)
+	 * @param resources represents a {@link Resources} that contains some information about packages.
+	 * @param packages represents a Set of packages for which information have to be taken from resources object.
+	 * @param suffix represents a string used as a discriminant when there is more than one package having the same name.
+	 * @return a Map that represents all the packages present and the ones not present. 
 	 */
-	public boolean createDirectory(String directoryName){
-		File directory = new File(directoryName);
-		return directory.mkdirs();
-	}
-
-	public void deleteDirectory(String directoryName) throws IOException
-	{
-		try
-		{
-			FileUtils.deleteDirectory(new File(directoryName));
-		}
-		catch (IOException ioe)
-		{
-			ioe.printStackTrace();
-			throw ioe;
-		}
-	}
-
-
-
-	/*@SuppressWarnings("unchecked")
-	public List<Element> getListOfPackagesInRessourceFile(String resourceFilePath){
-		SAXBuilder builder = new SAXBuilder();
-		File ressourceFile = null;
-		List<Element> list = null;
-		ressourceFile = new File(resourceFilePath);
-		//ressourceFile = new File(getClass().getClassLoader().getResource(resourceFilePath).getPath());
-		System.out.println(ressourceFile.exists());
-
-		try {
-			Document document = (Document) builder.build(ressourceFile);
-			Element rootNode = document.getRootElement();
-			Element packagesNode = rootNode.getChild("packages");
-			list = (List<Element>) packagesNode.getChildren("package");
-		} catch (JDOMException | IOException e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	public List<Element> getListOfPackagesUpdatedFromRessourceFile(String resourceFilePath, List<String> packagesUpdated){
-		List<Element> packagesInResourceFile = getListOfPackagesInRessourceFile(resourceFilePath);
-		List<Element> elements = null;
-		if(packagesInResourceFile != null && packagesUpdated != null){
-			for(String packageUpdate : packagesUpdated){
-				for(Element packageInResourceFile : packagesInResourceFile){
-					if(packageUpdate.equals(packageInResourceFile.getAttributeValue("name"))){
-						if(elements == null){
-							elements = new ArrayList<Element>();
-						}
-						elements.add(packageInResourceFile);
+	public static Map<String, Set<PackageElement>> getPackagesInResources(Resources resources, Set<PackageInfo> packages, String suffix){
+		
+		Map<String, Set<PackageElement>> result = new HashMap<String, Set<PackageElement>>();
+		Set<PackageElement> packageElementsPresent = new HashSet<PackageElement>();
+		Set<PackageElement> packageElementsNotPresent = new HashSet<PackageElement>();
+		for(PackageInfo updatedPackage : packages){
+			PackageElement tmpPkg = null;
+			for(PackageElement pkg : resources.getPackageWrapper().getPackageElements()){
+				if(StringUtils.equals(updatedPackage.getName(), pkg.getName())){
+					if(suffix == null || StringUtils.equals(pkg.getId(), pkg.getName()+suffix)){
+						packageElementsPresent.add(pkg);
+						tmpPkg = null; // In case while running "tmpPkg" has been valued
+						break;
+					}else if(StringUtils.equals(pkg.getId(), pkg.getName())){
+						tmpPkg = pkg;
 					}
 				}
 			}
-
+			if(tmpPkg != null){
+				packageElementsPresent.add(tmpPkg);
+			}else{
+				//For the packages not presents in resources file
+				packageElementsNotPresent.add(new PackageElement(null, updatedPackage.getName(), null, null));
+			}
 		}
-			return elements;
-	}*/
-
-	public File copyFileToFolder(String fileToCopy, String directoryInWhichPaste) throws IOException{
-		File srcFile = new File(fileToCopy);
-		File destFile = new File(directoryInWhichPaste);
-		try {
-			FileUtils.copyFile(srcFile, destFile);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new IOException();
+		if(packageElementsPresent.isEmpty()) {
+			packageElementsPresent = null;
 		}
-		return destFile;
+		if(packageElementsNotPresent.isEmpty()) {
+			packageElementsNotPresent = null;
+		}
+		result.put("present", packageElementsPresent);
+		result.put("notPresent", packageElementsNotPresent);
+		return result;
 	}
 
 	/**
-	 * Allow to know if one delivery had already been done for this release version.
-	 * It takes the delivery name and the release version to do that check since the delivery folder is named
-	 * AAAAMMDD_DeliveryName_releaseVersion.
-	 * It checks if there is no existing folder with the same deliveryName and the same releaseVersion.
-	 * @return
+	 * Removes specific characters inside Dir of PackageElement list.
+	 * 
+	 * @param packageElements represents a list of PackageElement.
+	 * @param specialCharacters represents a string list that have to be stripped out from the PackageElement "Dir" properties .
+	 * @return a Set of PackageElement containing Dir attribute without given specialCharacter.
 	 */
-	public boolean isDeliveryPackageAlreadyExist(){
-		return true;
+	public static Set<PackageElement> removeSpecialCharacterOfPackagesList(Set<PackageElement> packageElements, List<String> specialCharacters){
+		for(PackageElement packageElement : packageElements){
+			packageElement.setDir(formatPackageDirString(packageElement.getDir(), specialCharacters));
+		}
+		return packageElements;
 	}
 
 	/**
 	 * The packageDir takes in the resources files consists of special characters like "[% or %]".
 	 * It just takes to remove those special characters.
 	 * 
-	 * @param packageDir represents the package directory takes from the resource file
+	 * @param packageDir represents the package directory takes from the resource file.
 	 * @param stringsToRemove represents the list of special character to remove.
 	 * 
 	 * @return packageDir without special characters put as argument
 	 */
-	public String formatPackageDirString(String packageDir, List<String> stringsToRemove){
+	public static String formatPackageDirString(String packageDir, List<String> stringsToRemove){
 		for(String stringToRemove : stringsToRemove){
 			packageDir = StringUtils.remove(packageDir, stringToRemove);
 		}

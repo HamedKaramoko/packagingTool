@@ -22,6 +22,15 @@ import org.tmatesoft.svn.core.wc.SVNUpdateClient;
  */
 public class SVNUtils {
 
+	/**
+	 * Exports a file or a folder from an SVN repository.
+	 * 
+	 * @param username represents the username for the SVN repository connection.
+	 * @param password represents the password for the SVN repository connection.
+	 * @param svnUrl represents the svnUrl to point on.
+	 * @param destPath represents the path where exporting the file taken from the SVN repository.
+	 * @throws SVNException
+	 */
 	@SuppressWarnings("deprecation")
 	public static void export(String username, String password, String svnUrl, String destPath) throws SVNException{
 		DAVRepositoryFactory.setup();
@@ -31,12 +40,8 @@ public class SVNUtils {
 		ISVNAuthenticationManager authManager = new BasicAuthenticationManager(username, password);
 		repository.setAuthenticationManager(authManager);
 		
-		//output some data to verify connection
-		System.out.println( "Repository Root: " + repository.getRepositoryRoot( true ) );
-		System.out.println(  "Repository UUID: " + repository.getRepositoryUUID( true ) );
 		//need to identify latest revision
 		long latestRevision = repository.getLatestRevision();
-		System.out.println(  "Repository Latest Revision: " + latestRevision);
 		
 		//create client manager and set authentication
 		SVNClientManager ourClientManager = SVNClientManager.newInstance();
