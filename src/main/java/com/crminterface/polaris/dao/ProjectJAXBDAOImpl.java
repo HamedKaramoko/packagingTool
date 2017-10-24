@@ -23,8 +23,8 @@ public class ProjectJAXBDAOImpl implements ProjectJAXBDAO {
 	private static Logger LOGGER = LoggerFactory.getLogger(ProjectJAXBDAOImpl.class);
 
 	@Override
-	public Set<Project> getAllProject(String XmlFilePath) throws JAXBException {
-		ProjectList appConfList = getWholeFile(XmlFilePath);
+	public Set<Project> getAllProject(String xmlFilePath) throws JAXBException {
+		ProjectList appConfList = getWholeFile(xmlFilePath);
 		if(appConfList == null){
 			return null;
 		}
@@ -32,10 +32,10 @@ public class ProjectJAXBDAOImpl implements ProjectJAXBDAO {
 	}
 
 	@Override
-	public void createProject(Project appConf, String XmlFilePath) throws IOException, JAXBException {
+	public void createProject(Project appConf, String xmlFilePath) throws IOException, JAXBException {
 		ProjectList appConfList = null;
 		try{
-			appConfList = getWholeFile(XmlFilePath);
+			appConfList = getWholeFile(xmlFilePath);
 			if(appConfList == null){
 				appConfList = new ProjectList();
 			}
@@ -43,32 +43,32 @@ public class ProjectJAXBDAOImpl implements ProjectJAXBDAO {
 			appConfList = new ProjectList();
 		} finally {
 			appConfList.getProjectList().add(appConf);
-			jaxbUtils.convertObjectToXmlFile(appConfList, XmlFilePath);
+			jaxbUtils.convertObjectToXmlFile(appConfList, xmlFilePath);
 		}
 	}
 
 	@Override
-	public void createAllProject(ProjectList appConfList, String XmlFilePath) throws JAXBException, IOException{
-		jaxbUtils.convertObjectToXmlFile(appConfList, XmlFilePath);
+	public void createAllProject(ProjectList appConfList, String xmlFilePath) throws JAXBException, IOException{
+		jaxbUtils.convertObjectToXmlFile(appConfList, xmlFilePath);
 	}
 
 	@Override
-	public Project getProject(String projectName, String XmlFilePath){
+	public Project getProject(String projectName, String xmlFilePath){
 		try{
-			return getSpecificProject(projectName, XmlFilePath);
+			return getSpecificProject(projectName, xmlFilePath);
 		}catch (JAXBException jaxbe) {
 			LOGGER.debug("Project {} not found : {}", projectName, jaxbe);
 			return null;
 		}
 	}
 
-	private ProjectList getWholeFile(String XmlFilePath) throws JAXBException{
+	private ProjectList getWholeFile(String xmlFilePath) throws JAXBException{
 		ProjectList appConfList = new ProjectList();
-		return jaxbUtils.convertXMLFileToObject(XmlFilePath, appConfList);
+		return jaxbUtils.convertXMLFileToObject(xmlFilePath, appConfList);
 	}
 
-	private Project getSpecificProject(String projectName, String XmlFilePath) throws JAXBException{
-		ProjectList appConfList = getWholeFile(XmlFilePath);
+	private Project getSpecificProject(String projectName, String xmlFilePath) throws JAXBException{
+		ProjectList appConfList = getWholeFile(xmlFilePath);
 		Project app = null;
 		for(Project appConf : appConfList.getProjectList()){
 			if(projectName.equals(appConf.getProjectName())){
@@ -80,15 +80,15 @@ public class ProjectJAXBDAOImpl implements ProjectJAXBDAO {
 	}
 
 	@Override
-	public void updateProject(Project oldAppConf, Project newAppConf, String XmlFilePath)
+	public void updateProject(Project oldAppConf, Project newAppConf, String xmlFilePath)
 			throws JAXBException, IOException {
 
-		ProjectList appConfList = getWholeFile(XmlFilePath);
+		ProjectList appConfList = getWholeFile(xmlFilePath);
 
 		appConfList.getProjectList().remove(oldAppConf);
 		appConfList.getProjectList().add(newAppConf);
 
-		createAllProject(appConfList, XmlFilePath);
+		createAllProject(appConfList, xmlFilePath);
 	}
 
 }

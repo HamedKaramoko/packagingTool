@@ -4,5 +4,5 @@ import com.crminterface.polaris.model.Parameters;
 
 public interface ParametersDAO {
 	public Parameters getParameters();
-	public void update(Parameters parameters);
+	public void save(Parameters parameters);
 }

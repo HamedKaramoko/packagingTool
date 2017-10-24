@@ -2,12 +2,10 @@ package com.crminterface.polaris.dao;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.hibernate.TransactionException;
 import org.springframework.stereotype.Repository;
 
 import com.crminterface.polaris.model.Project;
@@ -19,17 +17,17 @@ public class ProjectDAOImpl implements ProjectDAO {
 	EntityManager entityManager;
 
 	@Override
-	public Project findByProjectName(String projectName) throws IllegalArgumentException {
+	public Project findByProjectName(String projectName){
 		return entityManager.find(Project.class, projectName);
 	}
 
 	@Override
-	public void createProject(Project appConf) throws EntityExistsException, IllegalArgumentException, TransactionException{
+	public void createProject(Project appConf){
 		entityManager.persist(appConf);		
 	}
 
 	@Override
-	public List<Project> getAllProject() throws IllegalArgumentException {
+	public List<Project> getAllProject(){
 		TypedQuery<Project> query = entityManager.createQuery(
                 "SELECT p FROM Project p",
                 Project.class);

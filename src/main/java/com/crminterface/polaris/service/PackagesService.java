@@ -136,6 +136,8 @@ public class PackagesService {
 						specialCharacters.add("[%");
 						specialCharacters.add("%]");
 						packageUpdatedInResourcesFile = Helper.removeSpecialCharacterOfPackagesList(packageUpdatedInResourcesFile, specialCharacters);
+						
+						//If packageUpdatedInResourcesFile = null alors on retourne OK. il y aura un warning de toutes les façons (A prévoir).
 
 						String serverPath = intServ.getOutBoundPackagePath();
 						String destPath = project.getCurrentDeliveryVersion();

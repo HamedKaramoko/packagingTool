@@ -23,8 +23,7 @@ public class ParametersDAOImpl implements ParametersDAO {
 	}
 
 	@Override
-	public void update(Parameters parameters) {
-		// TODO Auto-generated method stub
+	public void save(Parameters parameters) {
+		entityManager.persist(parameters);
 	}
-
 }
